@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pizzería Dí Carlos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <img src="img/Logo_pizzeria.jpg" alt="Logo Pizzería Dí Carlos" class="brand-icon" />
+      <span class="brand-name">Dí Carlos</span>
+    </div>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" class="nav-link active" data-view="home">Inicio</a></li>
+      <li><a href="#" class="nav-link" data-view="menu">Menú</a></li>
+      <li>
+        <a href="#" class="nav-link nav-cart-link" data-view="cart">
+          <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 01-8 0" />
+          </svg>
+          Carrito
+          <span class="cart-badge" id="cart-count">0</span>
+        </a>
+      </li>
+      <li><a href="#" class="nav-link" data-view="contact">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- VISTA: INICIO -->
+    <section id="view-home" class="view active">
+      <div class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <span class="hero-tag">🍕 Bienvenido a Pizzería Dí Carlos</span>
+          <h1 class="hero-title">Sabor que<br />enamora cada<br />bocado</h1>
+          <p class="hero-subtitle">
+            Pizzas artesanales, pastas frescas y mucho más,
+            preparados con ingredientes de primera calidad en Cochabamba.
+          </p>
+          <div class="hero-actions">
+            <a href="#" class="btn btn-primary" data-view="menu">Ver Menú</a>
+            <a href="#" class="btn btn-outline" data-view="contact">Contáctanos</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-number">5+</span>
+          <span class="stat-label">Años de experiencia</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">20+</span>
+          <span class="stat-label">Platos en el menú</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">1000+</span>
+          <span class="stat-label">Clientes felices</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">⭐ 4.9</span>
+          <span class="stat-label">Calificación</span>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🌿</div>
+          <h3>Ingredientes Frescos</h3>
+          <p>Seleccionamos los mejores ingredientes locales cada día</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🔥</div>
+          <h3>Horno de Leña</h3>
+          <p>Cocción tradicional para un sabor auténtico e inigualable</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🚀</div>
+          <h3>Entrega Rápida</h3>
+          <p>Tu pedido listo y caliente en el menor tiempo posible</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">❤️</div>
+          <h3>Hecho con Amor</h3>
+          <p>Cada plato preparado con pasión y dedicación</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA: MENÚ -->
+    <section id="view-menu" class="view">
+      <div class="section-header">
+        <h2>Nuestro Menú</h2>
+        <p>Elige tu plato favorito y agrégalo al carrito</p>
+      </div>
+
+      <!-- Filtros de categoría -->
+      <div class="menu-filters">
+        <button class="menu-filter-btn active" data-filtro="todos">🍽️ Todos</button>
+        <button class="menu-filter-btn" data-filtro="pizza">🍕 Pizzas</button>
+        <button class="menu-filter-btn" data-filtro="pasta">🍝 Pasta</button>
+        <button class="menu-filter-btn" data-filtro="tipico">🥘 Platos Típicos</button>
+        <button class="menu-filter-btn" data-filtro="bebida">☕ Bebidas Calientes</button>
+      </div>
+
+      <div id="products-container" class="products-container"></div>
+    </section>
+
+    <!-- VISTA: CARRITO -->
+    <section id="view-cart" class="view">
+      <div class="section-header">
+        <h2>Tu Carrito</h2>
+        <p>Revisa y confirma tu pedido</p>
+      </div>
+      <div id="cart-container"></div>
+    </section>
+
+    <!-- VISTA: CONTACTO -->
+    <section id="view-contact" class="view">
+      <div class="section-header">
+        <h2>Contacto</h2>
+        <p>Escríbenos y te responderemos pronto.</p>
+      </div>
+      <div class="contact-hero">
+        <p>¿Tienes alguna pregunta o quieres hacer un pedido especial? ¡Escríbenos!</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="contact-icon-wrap">📍</div>
+          <h3>Dirección</h3>
+          <p>Av. Melchor Pérez<br />Cochabamba, Bolivia</p>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon-wrap">📞</div>
+          <h3>Teléfono</h3>
+          <p>+591 71 467 662</p>
+          <a href="tel:+59171467662" class="contact-link">Llamar ahora</a>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon-wrap">🕐</div>
+          <h3>Horario</h3>
+          <p>Lunes a Domingo<br />6:00 pm – 11:00 pm</p>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon-wrap">💬</div>
+          <h3>WhatsApp</h3>
+          <p>Pedidos y consultas</p>
+          <a href="https://wa.me/59171467662" target="_blank" class="contact-link">Escribir mensaje</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="img/Logo_pizzeria.jpg" alt="Logo" class="footer-logo" />
+        <span>Pizzería Dí Carlos</span>
+      </div>
+      <p class="footer-copy">© 2026 Pizzería Dí Carlos · Desarrollado por <strong>Neythan Ramos</strong></p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+
+</html>
