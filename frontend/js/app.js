@@ -8,16 +8,20 @@ const navToggle = document.getElementById("navToggle");
 const navLinksMenu = document.getElementById("navLinks");
 
 function navegarA(vista) {
-  document.querySelectorAll(".view").forEach(s => s.classList.remove("active"));
+  document
+    .querySelectorAll(".view")
+    .forEach((s) => s.classList.remove("active"));
   const target = document.getElementById("view-" + vista);
   if (target) target.classList.add("active");
-  navLinks.forEach(l => l.classList.toggle("active", l.dataset.view === vista));
+  navLinks.forEach((l) =>
+    l.classList.toggle("active", l.dataset.view === vista),
+  );
   navLinksMenu.classList.remove("open");
   navToggle.classList.remove("active");
 }
 
-navLinks.forEach(link => {
-  link.addEventListener("click", e => {
+navLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
     e.preventDefault();
     if (link.dataset.view) navegarA(link.dataset.view);
   });
@@ -28,7 +32,7 @@ navToggle.addEventListener("click", () => {
   navLinksMenu.classList.toggle("open");
 });
 
-document.addEventListener("click", e => {
+document.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-view]");
   if (btn && !btn.classList.contains("nav-link")) {
     e.preventDefault();
@@ -38,39 +42,169 @@ document.addEventListener("click", e => {
 
 // ── Sabores de pizza ─────────────────────────────
 const saboresPizza = [
-  { id: "di-carlos",   nombre: "Dí Carlos",    descripcion: "Jamón, salame y hongos frescos sobre base de tomate y mozzarella",              badge: "Especial", imagen: "img/Pizza03.jpg" },
-  { id: "margarita",   nombre: "Margarita",     descripcion: "Salsa de tomate artesanal, mozzarella fresca y albahaca, la clásica de siempre", badge: "Clásica",  imagen: "img/Pizza03.jpg" },
-  { id: "pepperoni",   nombre: "Pepperoni",     descripcion: "Generosa capa de pepperoni sobre mozzarella derretida y salsa de tomate",        badge: "Popular",  imagen: "img/Pizza03.jpg" },
-  { id: "cuatro-q",    nombre: "Cuatro Quesos", descripcion: "Mozzarella, parmesano, gouda y queso azul sobre base de crema blanca",           badge: "Premium",  imagen: "img/Pizza03.jpg" },
-  { id: "hawaiana",    nombre: "Hawaiana",      descripcion: "Jamón dulce y piña tropical con mozzarella y salsa de tomate",                   badge: null,       imagen: "img/Pizza03.jpg" },
-  { id: "vegetariana", nombre: "Vegetariana",   descripcion: "Pimientos, champiñones, aceitunas, cebolla morada y tomate cherry",              badge: "Veggie",   imagen: "img/Pizza03.jpg" },
-  { id: "pollo-bbq",   nombre: "Pollo BBQ",     descripcion: "Pollo a la parrilla, salsa BBQ ahumada, cebolla caramelizada y mozzarella",      badge: "Popular",  imagen: "img/Pizza03.jpg" },
-  { id: "napolitana",  nombre: "Napolitana",    descripcion: "Tomate fresco, anchoas, aceitunas negras, alcaparras y orégano",                 badge: null,       imagen: "img/Pizza03.jpg" },
+  {
+    id: "di-carlos",
+    nombre: "Dí Carlos",
+    descripcion: "Tiene jamón, salame y hongos frescos.",
+    badge: "Especial",
+    imagen: "img/DiCarlos.jpg",
+  },
+  {
+    id: "bianca",
+    nombre: "Bianca",
+    descripcion: "Tiene salchicha, carne y aceitunas",
+    badge: "Nuevo",
+    imagen: "img/Bianca.jpg",
+  },
+  {
+    id: "calabresa",
+    nombre: "Calabresa",
+    descripcion: "Tiene chorizo, carne, cebolla y locoto.",
+    badge: null,
+    imagen: "img/DiCarlos.jpg",
+  },
+  {
+    id: "jardinera",
+    nombre: "Jardinera",
+    descripcion: "Tiene jamón, huevo, aceitunas y cebolla.",
+    badge: "Premium",
+    imagen: "img/DiCarlos.jpg",
+  },
+  {
+    id: "criollo",
+    nombre: "Criollo",
+    descripcion: "Jamón dulce y piña tropical con mozzarella y salsa de tomate",
+    badge: null,
+    imagen: "img/DiCarlos.jpg",
+  },
+  {
+    id: "vegetariana",
+    nombre: "Vegetariana",
+    descripcion:
+      "Pimientos, champiñones, aceitunas, cebolla morada y tomate cherry",
+    badge: "Veggie",
+    imagen: "img/DiCarlos.jpg",
+  },
+  {
+    id: "pollo-bbq",
+    nombre: "Pollo BBQ",
+    descripcion:
+      "Pollo a la parrilla, salsa BBQ ahumada, cebolla caramelizada y mozzarella",
+    badge: "Popular",
+    imagen: "img/DiCarlos.jpg",
+  },
+  {
+    id: "napolitana",
+    nombre: "Napolitana",
+    descripcion:
+      "Tomate fresco, anchoas, aceitunas negras, alcaparras y orégano",
+    badge: null,
+    imagen: "img/DiCarlos.jpg",
+  },
 ];
 
 // ── 5 tamaños de pizza ───────────────────────────
 const tamañosPizza = [
-  { id: "mini",     label: "Mini",     porciones: 2,  precio: 22 },
-  { id: "personal", label: "Personal", porciones: 4,  precio: 32 },
-  { id: "mediana",  label: "Mediana",  porciones: 6,  precio: 42 },
-  { id: "grande",   label: "Grande",   porciones: 8,  precio: 55 },
-  { id: "familiar", label: "Familiar", porciones: 10, precio: 68 },
+  { id: "personal", label: "Personal", porciones: 2, precio: 27 },
+  { id: "pequeña", label: "Pequeña", porciones: 4, precio: 42 },
+  { id: "mediana", label: "Mediana", porciones: 6, precio: 56 },
+  { id: "familiar", label: "Familiar", porciones: 8, precio: 82 },
+  { id: "extra_familiar", label: "Extra Familiar", porciones: 10, precio: 102 },
 ];
 
 // ── Resto de productos ───────────────────────────
 const productos = [
   // Pasta
-  { id: 20, nombre: "Lasaña",              categoria: "pasta",  descripcion: "Capas de pasta fresca con pollo, jamón, carne y salsa bechamel",              precio: 37, imagen: "img/Lasaña.jpg",    badge: "Especial" },
-  { id: 21, nombre: "Espagueti Bolognesa", categoria: "pasta",  descripcion: "Espagueti al dente con salsa de carne molida, tomate y hierbas italianas",     precio: 32, imagen: "img/Lasaña.jpg",    badge: null },
-  { id: 22, nombre: "Fettuccine Alfredo",  categoria: "pasta",  descripcion: "Fettuccine con salsa cremosa de mantequilla, parmesano y ajo",                 precio: 34, imagen: "img/Lasaña.jpg",    badge: "Popular" },
+  {
+    id: 20,
+    nombre: "Lasaña",
+    categoria: "pasta",
+    descripcion:
+      "Capas de pasta fresca con pollo, jamón, carne y salsa bechamel",
+    precio: 37,
+    imagen: "img/Lasaña.jpg",
+    badge: "Especial",
+  },
+  {
+    id: 21,
+    nombre: "Espagueti Bolognesa",
+    categoria: "pasta",
+    descripcion:
+      "Espagueti al dente con salsa de carne molida, tomate y hierbas italianas",
+    precio: 32,
+    imagen: "img/Lasaña.jpg",
+    badge: null,
+  },
+  {
+    id: 22,
+    nombre: "Fettuccine Alfredo",
+    categoria: "pasta",
+    descripcion: "Fettuccine con salsa cremosa de mantequilla, parmesano y ajo",
+    precio: 34,
+    imagen: "img/Lasaña.jpg",
+    badge: "Popular",
+  },
   // Platos Típicos
-  { id: 30, nombre: "Salchipapa",          categoria: "tipico", descripcion: "Salchicha jugosa con papas fritas crujientes, salsa especial de la casa",      precio: 17, imagen: "img/Salchipapa.jpg", badge: "Popular" },
-  { id: 31, nombre: "Pique Macho",         categoria: "tipico", descripcion: "Carne, salchicha, locoto y papas fritas, el plato más contundente",            precio: 36, imagen: "img/PiqueMacho.jpg", badge: "Popular" },
-  { id: 32, nombre: "Silpancho",           categoria: "tipico", descripcion: "Milanesa de res apanada sobre arroz, papa cocida, huevo frito y ensalada",     precio: 30, imagen: "img/PiqueMacho.jpg", badge: null },
+  {
+    id: 30,
+    nombre: "Salchipapa",
+    categoria: "tipico",
+    descripcion:
+      "Salchicha jugosa con papas fritas crujientes, salsa especial de la casa",
+    precio: 17,
+    imagen: "img/Salchipapa.jpg",
+    badge: "Popular",
+  },
+  {
+    id: 31,
+    nombre: "Pique Macho",
+    categoria: "tipico",
+    descripcion:
+      "Carne, salchicha, locoto y papas fritas, el plato más contundente",
+    precio: 36,
+    imagen: "img/PiqueMacho.jpg",
+    badge: "Popular",
+  },
+  {
+    id: 32,
+    nombre: "Silpancho",
+    categoria: "tipico",
+    descripcion:
+      "Milanesa de res apanada sobre arroz, papa cocida, huevo frito y ensalada",
+    precio: 30,
+    imagen: "img/PiqueMacho.jpg",
+    badge: null,
+  },
   // Bebidas Calientes
-  { id: 40, nombre: "Café",               categoria: "bebida", descripcion: "Infusión de semillas tostadas Coffea, estimulante y aromático",                precio: 5,  imagen: "img/Café.jpg",       badge: null },
-  { id: 41, nombre: "Mate",               categoria: "bebida", descripcion: "Infusión natural de manzanilla, relajante y aromática",                        precio: 5,  imagen: "img/Mate.jpg",       badge: null },
-  { id: 42, nombre: "Chocolate Caliente", categoria: "bebida", descripcion: "Chocolate artesanal con leche entera, cremoso y reconfortante",                precio: 8,  imagen: "img/Café.jpg",       badge: null },
+  {
+    id: 40,
+    nombre: "Café",
+    categoria: "bebida",
+    descripcion:
+      "Infusión de semillas tostadas Coffea, estimulante y aromático",
+    precio: 5,
+    imagen: "img/Café.jpg",
+    badge: null,
+  },
+  {
+    id: 41,
+    nombre: "Mate",
+    categoria: "bebida",
+    descripcion: "Infusión natural de manzanilla, relajante y aromática",
+    precio: 5,
+    imagen: "img/Mate.jpg",
+    badge: null,
+  },
+  {
+    id: 42,
+    nombre: "Chocolate Caliente",
+    categoria: "bebida",
+    descripcion:
+      "Chocolate artesanal con leche entera, cremoso y reconfortante",
+    precio: 8,
+    imagen: "img/Café.jpg",
+    badge: null,
+  },
 ];
 
 // ── Carrito ──────────────────────────────────────
@@ -96,7 +230,7 @@ function actualizarContador() {
 }
 
 function agregarAlCarrito(clave, nombre, precio, imagen, detalle) {
-  const existente = carrito.find(p => p.clave === clave);
+  const existente = carrito.find((p) => p.clave === clave);
   if (existente) {
     existente.cantidad += 1;
   } else {
@@ -108,10 +242,10 @@ function agregarAlCarrito(clave, nombre, precio, imagen, detalle) {
 }
 
 function cambiarCantidad(clave, delta) {
-  const item = carrito.find(p => p.clave === clave);
+  const item = carrito.find((p) => p.clave === clave);
   if (!item) return;
   item.cantidad += delta;
-  if (item.cantidad <= 0) carrito = carrito.filter(p => p.clave !== clave);
+  if (item.cantidad <= 0) carrito = carrito.filter((p) => p.clave !== clave);
   guardarCarrito();
   actualizarContador();
   renderizarCarrito();
@@ -121,7 +255,7 @@ function cambiarCantidad(clave, delta) {
 function renderizarPizzas() {
   const contenedor = document.getElementById("products-container");
 
-  let saborSel  = saboresPizza[0];
+  let saborSel = saboresPizza[0];
   let tamañoSel = tamañosPizza[2]; // Mediana por defecto
 
   function build() {
@@ -134,13 +268,17 @@ function renderizarPizzas() {
             <span class="pizza-step-num">1</span> Elige el sabor
           </h3>
           <div class="flavor-grid">
-            ${saboresPizza.map(s => `
+            ${saboresPizza
+              .map(
+                (s) => `
               <button class="flavor-btn ${s.id === saborSel.id ? "selected" : ""}" data-sabor="${s.id}">
                 ${s.badge ? `<span class="flavor-badge">${s.badge}</span>` : ""}
                 <img src="${s.imagen}" alt="${s.nombre}" />
                 <span class="flavor-name">${s.nombre}</span>
               </button>
-            `).join("")}
+            `,
+              )
+              .join("")}
           </div>
         </div>
 
@@ -150,14 +288,18 @@ function renderizarPizzas() {
             <span class="pizza-step-num">2</span> Elige el tamaño
           </h3>
           <div class="size-grid">
-            ${tamañosPizza.map(t => `
+            ${tamañosPizza
+              .map(
+                (t) => `
               <button class="size-btn ${t.id === tamañoSel.id ? "selected" : ""}" data-tamaño="${t.id}">
                 <span class="size-icon">${getSizeIcon(t.id)}</span>
                 <span class="size-name">${t.label}</span>
                 <span class="size-porciones">${t.porciones} porciones</span>
                 <span class="size-price">Bs. ${t.precio}</span>
               </button>
-            `).join("")}
+            `,
+              )
+              .join("")}
           </div>
         </div>
 
@@ -179,41 +321,55 @@ function renderizarPizzas() {
       </div>`;
 
     // Eventos sabor
-    contenedor.querySelectorAll(".flavor-btn").forEach(btn => {
+    contenedor.querySelectorAll(".flavor-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        saborSel = saboresPizza.find(s => s.id === btn.dataset.sabor);
+        saborSel = saboresPizza.find((s) => s.id === btn.dataset.sabor);
         build();
       });
     });
 
     // Eventos tamaño
-    contenedor.querySelectorAll(".size-btn").forEach(btn => {
+    contenedor.querySelectorAll(".size-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        tamañoSel = tamañosPizza.find(t => t.id === btn.dataset.tamaño);
+        tamañoSel = tamañosPizza.find((t) => t.id === btn.dataset.tamaño);
         build();
       });
     });
 
     // Agregar al carrito
-    contenedor.querySelector("#btn-agregar-pizza").addEventListener("click", function () {
-      const clave   = `pizza-${saborSel.id}-${tamañoSel.id}`;
-      const nombre  = `Pizza ${saborSel.nombre}`;
-      const detalle = `${tamañoSel.label} · ${tamañoSel.porciones} porciones`;
-      agregarAlCarrito(clave, nombre, tamañoSel.precio, saborSel.imagen, detalle);
-      this.textContent = "✓ Agregado";
-      this.style.background = "linear-gradient(135deg,#27ae60,#2ecc71)";
-      setTimeout(() => {
-        this.textContent = "+ Agregar al carrito";
-        this.style.background = "";
-      }, 1200);
-    });
+    contenedor
+      .querySelector("#btn-agregar-pizza")
+      .addEventListener("click", function () {
+        const clave = `pizza-${saborSel.id}-${tamañoSel.id}`;
+        const nombre = `Pizza ${saborSel.nombre}`;
+        const detalle = `${tamañoSel.label} · ${tamañoSel.porciones} porciones`;
+        agregarAlCarrito(
+          clave,
+          nombre,
+          tamañoSel.precio,
+          saborSel.imagen,
+          detalle,
+        );
+        this.textContent = "✓ Agregado";
+        this.style.background = "linear-gradient(135deg,#27ae60,#2ecc71)";
+        setTimeout(() => {
+          this.textContent = "+ Agregar al carrito";
+          this.style.background = "";
+        }, 1200);
+      });
   }
 
   build();
 }
 
 function getSizeIcon(id) {
-  const icons = { mini: "🍕", personal: "🍕", mediana: "🍕🍕", grande: "🍕🍕", familiar: "🍕🍕🍕" };
+  const icons = {
+    mini: "🍕",
+    personal: "🍕",
+    mediana: "🍕🍕",
+    grande: "🍕🍕",
+    familiar: "🍕🍕🍕",
+  };
   return icons[id] || "🍕";
 }
 
@@ -232,8 +388,10 @@ function renderizarProductos(filtro = "todos") {
     // Luego el resto de productos debajo
     const extra = document.createElement("div");
     extra.className = "products-extra-grid";
-    productos.forEach(p => {
-      const badgeHTML = p.badge ? `<span class="product-badge">${p.badge}</span>` : "";
+    productos.forEach((p) => {
+      const badgeHTML = p.badge
+        ? `<span class="product-badge">${p.badge}</span>`
+        : "";
       extra.innerHTML += `
         <div class="product-card">
           <div class="product-img-wrap">
@@ -257,15 +415,17 @@ function renderizarProductos(filtro = "todos") {
 
   // Categoría específica (pasta / tipico / bebida)
   contenedor.innerHTML = "";
-  const lista = productos.filter(p => p.categoria === filtro);
+  const lista = productos.filter((p) => p.categoria === filtro);
 
   if (lista.length === 0) {
     contenedor.innerHTML = `<p class="no-products">No hay productos en esta categoría.</p>`;
     return;
   }
 
-  lista.forEach(p => {
-    const badgeHTML = p.badge ? `<span class="product-badge">${p.badge}</span>` : "";
+  lista.forEach((p) => {
+    const badgeHTML = p.badge
+      ? `<span class="product-badge">${p.badge}</span>`
+      : "";
     contenedor.innerHTML += `
       <div class="product-card">
         <div class="product-img-wrap">
@@ -287,14 +447,23 @@ function renderizarProductos(filtro = "todos") {
 }
 
 function bindBtnAdd(scope) {
-  scope.querySelectorAll(".btn-add").forEach(btn => {
+  scope.querySelectorAll(".btn-add").forEach((btn) => {
     btn.addEventListener("click", function () {
-      const prod = productos.find(p => p.id === parseInt(this.dataset.id));
+      const prod = productos.find((p) => p.id === parseInt(this.dataset.id));
       if (!prod) return;
-      agregarAlCarrito(`prod-${prod.id}`, prod.nombre, prod.precio, prod.imagen, null);
+      agregarAlCarrito(
+        `prod-${prod.id}`,
+        prod.nombre,
+        prod.precio,
+        prod.imagen,
+        null,
+      );
       this.textContent = "✓ Agregado";
       this.style.background = "linear-gradient(135deg,#27ae60,#2ecc71)";
-      setTimeout(() => { this.textContent = "+ Agregar"; this.style.background = ""; }, 1000);
+      setTimeout(() => {
+        this.textContent = "+ Agregar";
+        this.style.background = "";
+      }, 1000);
     });
   });
 }
@@ -302,9 +471,9 @@ function bindBtnAdd(scope) {
 // ── Filtros del menú ─────────────────────────────
 function iniciarFiltros() {
   const filtros = document.querySelectorAll(".menu-filter-btn");
-  filtros.forEach(btn => {
+  filtros.forEach((btn) => {
     btn.addEventListener("click", () => {
-      filtros.forEach(b => b.classList.remove("active"));
+      filtros.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       renderizarProductos(btn.dataset.filtro);
     });
@@ -326,7 +495,7 @@ function renderizarCarrito() {
     return;
   }
 
-  carrito.forEach(item => {
+  carrito.forEach((item) => {
     const imgHTML = item.imagen
       ? `<img class="cart-item-img" src="${item.imagen}" alt="${item.nombre}" />`
       : `<div class="cart-item-emoji-box">🍽️</div>`;
@@ -350,7 +519,7 @@ function renderizarCarrito() {
       </div>`;
   });
 
-  const total      = carrito.reduce((sum, p) => sum + p.precio * p.cantidad, 0);
+  const total = carrito.reduce((sum, p) => sum + p.precio * p.cantidad, 0);
   const totalItems = carrito.reduce((sum, p) => sum + p.cantidad, 0);
 
   contenedor.innerHTML += `
@@ -370,20 +539,33 @@ function renderizarCarrito() {
       <button class="btn-checkout">🍕 Confirmar Pedido</button>
     </div>`;
 
-  contenedor.querySelectorAll(".btn-plus").forEach(btn =>
-    btn.addEventListener("click", () => cambiarCantidad(btn.dataset.clave, 1)));
-  contenedor.querySelectorAll(".btn-minus").forEach(btn =>
-    btn.addEventListener("click", () => cambiarCantidad(btn.dataset.clave, -1)));
-  contenedor.querySelectorAll(".btn-remove").forEach(btn =>
+  contenedor
+    .querySelectorAll(".btn-plus")
+    .forEach((btn) =>
+      btn.addEventListener("click", () =>
+        cambiarCantidad(btn.dataset.clave, 1),
+      ),
+    );
+  contenedor
+    .querySelectorAll(".btn-minus")
+    .forEach((btn) =>
+      btn.addEventListener("click", () =>
+        cambiarCantidad(btn.dataset.clave, -1),
+      ),
+    );
+  contenedor.querySelectorAll(".btn-remove").forEach((btn) =>
     btn.addEventListener("click", () => {
-      carrito = carrito.filter(p => p.clave !== btn.dataset.clave);
+      carrito = carrito.filter((p) => p.clave !== btn.dataset.clave);
       guardarCarrito();
       actualizarContador();
       renderizarCarrito();
-    }));
+    }),
+  );
 
   contenedor.querySelector(".btn-checkout").addEventListener("click", () => {
-    alert(`¡Pedido confirmado! Total: Bs. ${total}\nTe contactaremos pronto. 🍕`);
+    alert(
+      `¡Pedido confirmado! Total: Bs. ${total}\nTe contactaremos pronto. 🍕`,
+    );
     carrito = [];
     guardarCarrito();
     actualizarContador();
