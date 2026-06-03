@@ -1346,3 +1346,231 @@ footer {
     margin-bottom: 10px;
   }
 }
+
+/* ==========================================================
+   INTERFAZ DE AUTENTICACIÓN (LOGIN & REGISTRO) - DÍ CARLOS
+========================================================== */
+
+/* Contenedor principal de la sección */
+#view-auth {
+  display: none; /* Controlado por app.js */
+  min-height: 75vh;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--cream); /* Fondo cálido característico */
+}
+
+#view-auth.active {
+  display: flex;
+}
+
+/* Tarjeta contenedora del Formulario */
+.auth-container {
+  background: var(--surface);
+  width: 100%;
+  max-width: 450px;
+  padding: 35px 30px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(192, 57, 43, 0.06);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.auth-container:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Encabezado e Isotipo interno */
+.auth-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.auth-header h2 {
+  font-family: "Playfair Display", serif;
+  color: var(--dark);
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  font-weight: 900;
+}
+
+.auth-header p {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
+/* Selector de Pestañas (Tabs) */
+.auth-tabs {
+  display: flex;
+  background: rgba(44, 26, 14, 0.05);
+  padding: 5px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 30px;
+  gap: 5px;
+}
+
+.auth-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 12px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  cursor: pointer;
+  border-radius: calc(var(--radius-sm) - 2px);
+  transition: all 0.25s ease;
+  text-align: center;
+}
+
+.auth-tab:hover {
+  color: var(--dark);
+}
+
+.auth-tab.active {
+  background: var(--surface);
+  color: var(--red);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Paneles de los Formularios */
+.auth-panel {
+  display: none;
+  animation: fadeInAuth 0.4s ease forwards;
+}
+
+.auth-panel.active {
+  display: block;
+}
+
+/* Estilización de Campos de Entrada (Inputs) */
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--dark-2);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  background-color: var(--surface);
+  border: 1.5px solid rgba(44, 26, 14, 0.15);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+/* Efectos Focus */
+.form-group input:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.15);
+  background-color: #fff;
+}
+
+/* Botones de Envío */
+.auth-container .btn-primary {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--red), var(--orange));
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.2);
+  transition: all 0.25s ease;
+  margin-top: 10px;
+}
+
+.auth-container .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(192, 57, 43, 0.35);
+  filter: brightness(1.05);
+}
+
+.auth-container .btn-primary:disabled {
+  background: #bdc3c7;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Mensajes de Feedback Dinámicos */
+.error-msg,
+.success-msg {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  display: none; /* Se muestra dinámicamente desde JS */
+  animation: fadeInAuth 0.3s ease;
+}
+
+.error-msg:not(:empty) {
+  display: block;
+  color: #c0392b;
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.15);
+}
+
+.success-msg:not(:empty) {
+  display: block;
+  color: #27ae60;
+  background: rgba(39, 174, 96, 0.08);
+  border: 1px solid rgba(39, 174, 96, 0.15);
+}
+
+/* Animación de entrada suave */
+@keyframes fadeInAuth {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── CONTROL DE VISTAS SPA (CORRECCIÓN) ── */
+/* Por defecto, todas las secciones con la clase .view están ocultas */
+.view {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Cuando una sección tiene la clase .active, se vuelve visible */
+.view.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Asegurar que los paneles internos de login/registro también respondan correctamente */
+.auth-panel {
+  display: none;
+}
+
+.auth-panel.active {
+  display: block;
+}
