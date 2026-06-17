@@ -1,5 +1,5 @@
 // ================================================
-// PIZZERÍA DÍ CARLOS — app.js
+// PIZZERÍA DÍ CARLOS — app.js (MODIFICADO CON SUPABASE)
 // ================================================
 
 // ── Navegación SPA ──────────────────────────────
@@ -11,117 +11,32 @@ function navegarA(vista) {
   document
     .querySelectorAll(".view")
     .forEach((s) => s.classList.remove("active"));
+
   const target = document.getElementById("view-" + vista);
   if (target) target.classList.add("active");
-  navLinks.forEach((l) =>
-    l.classList.toggle("active", l.dataset.view === vista),
-  );
-  navLinksMenu.classList.remove("open");
-  navToggle.classList.remove("active");
+
+  document
+    .querySelectorAll(".nav-link")
+    .forEach((l) => l.classList.toggle("active", l.dataset.view === vista));
+
+  const navLinksMenu = document.getElementById("navLinks");
+  const navToggle = document.getElementById("navToggle");
+  if (navLinksMenu) navLinksMenu.classList.remove("open");
+  if (navToggle) navToggle.classList.remove("active");
 }
-
-navLinks.forEach((link) => {
-  link.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (link.dataset.view) navegarA(link.dataset.view);
-  });
-});
-
-navToggle.addEventListener("click", () => {
-  navToggle.classList.toggle("active");
-  navLinksMenu.classList.toggle("open");
-});
 
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("[data-view]");
-  if (btn && !btn.classList.contains("nav-link")) {
+  if (btn) {
     e.preventDefault();
     navegarA(btn.dataset.view);
   }
 });
 
-// ── Sabores de pizza ─────────────────────────────
-const saboresPizza = [
-  {
-    id: "di-carlos",
-    nombre: "Dí Carlos",
-    descripcion: "Tiene jamón, salame y hongos frescos.",
-    badge: "Especial",
-    imagen: "img/DiCarlos.jpg",
-  },
-  {
-    id: "bianca",
-    nombre: "Bianca",
-    descripcion: "Tiene salchicha, carne y aceitunas",
-    badge: "Nuevo",
-    imagen: "img/Bianca.jpg",
-  },
-  {
-    id: "calabresa",
-    nombre: "Calabresa",
-    descripcion: "Tiene chorizo, carne, cebolla y locoto.",
-    badge: null,
-    imagen: "img/DiCarlos.jpg",
-  },
-  {
-    id: "jardinera",
-    nombre: "Jardinera",
-    descripcion: "Tiene jamón, huevo, aceitunas y cebolla.",
-    badge: null,
-    imagen: "img/Jardinera.jpeg",
-  },
-  {
-    id: "criollo",
-    nombre: "Criollo",
-    descripcion: "Tiene carne, choclo, cebolla y locoto.",
-    badge: null,
-    imagen: "img/Criollo.jpg",
-  },
-  {
-    id: "española",
-    nombre: "Española",
-    descripcion: "Tiene chorizo, jamón, tomate y aceitunas.",
-    badge: null,
-    imagen: "img/Española.jpg",
-  },
-  {
-    id: "americana",
-    nombre: "Americana",
-    descripcion: "Tiene jamón, tocino, tomate y pimentón.",
-    badge: null,
-    imagen: "img/DiCarlos.jpg",
-  },
-  {
-    id: "napolitana",
-    nombre: "Napolitana",
-    descripcion: "Tiene jamón, tomate y aceitunas.",
-    badge: null,
-    imagen: "img/Napolitana.jpeg",
-  },
-  {
-    id: "hawaiana",
-    nombre: "Hawaiana",
-    descripcion: "Tiene jamón y piña o durazno.",
-    badge: null,
-    imagen: "img/Hawaiana.jpg",
-  },
-  {
-    id: "portuguesa",
-    nombre: "Portuguesa",
-    descripcion: "Tiene pollo, tocino, choclo y aceitunas.",
-    badge: "Popular",
-    imagen: "img/Portuguesa.jpg",
-  },
-  {
-    id: "vegetariana",
-    nombre: "Vegetariana",
-    descripcion: "Tiene tomate, choclo, hongos, cebolla, pimentón y aceitunas.",
-    badge: null,
-    imagen: "img/DiCarlos.jpg",
-  },
-];
+// ── Sabores de pizza (Ahora se cargan dinámicamente desde Supabase) ──
+let saboresPizza = [];
 
-// ── 5 tamaños de pizza ───────────────────────────
+// ── 5 tamaños de pizza fijos (Como se muestra en "Guardar pizza.PNG") ──
 const tamañosPizza = [
   { id: "personal", label: "Personal", porciones: 2, precio: 27 },
   { id: "pequeña", label: "Pequeña", porciones: 4, precio: 42 },
@@ -130,78 +45,7 @@ const tamañosPizza = [
   { id: "extra_familiar", label: "Extra Familiar", porciones: 10, precio: 102 },
 ];
 
-// ── Resto de productos ───────────────────────────
-const productos = [
-  {
-    id: 20,
-    nombre: "Lasaña",
-    categoria: "pasta",
-    descripcion: "Tiene salas bolognesa, pollo, jamón y queso mozzarella.",
-    precio: 38,
-    imagen: "img/Lasaña.jpg",
-    badge: "Especial",
-  },
-  {
-    id: 21,
-    nombre: "Fetuccini",
-    categoria: "pasta",
-    descripcion:
-      "Tiene salsa bechamel (blanca), jamón, pollo, tocino y queso parmesano.",
-    precio: 27,
-    imagen: "img/Fetuccini.jpg",
-    badge: null,
-  },
-  {
-    id: 30,
-    nombre: "Salchipapa",
-    categoria: "tipico",
-    descripcion:
-      "Salchicha jugosa con papas fritas crujientes, salsa especial de la casa",
-    precio: 17,
-    imagen: "img/Salchipapa.jpg",
-    badge: "Popular",
-  },
-  {
-    id: 31,
-    nombre: "Pique Macho",
-    categoria: "tipico",
-    descripcion:
-      "Carne, salchicha, locoto y papas fritas, el plato más contundente",
-    precio: 36,
-    imagen: "img/PiqueMacho.jpg",
-    badge: "Popular",
-  },
-  {
-    id: 32,
-    nombre: "Hamburguesa",
-    categoria: "tipico",
-    descripcion:
-      "Tiene carne, queso, porción de papa frita, cebolla, tomate y lechuga.",
-    precio: 18,
-    imagen: "img/Hamburguesa.jpg",
-    badge: null,
-  },
-  {
-    id: 40,
-    nombre: "Platano Licuado",
-    categoria: "bebida",
-    descripcion: "Tiene platano y leche.",
-    precio: 9,
-    imagen: "img/Jugodeplatano.jpg",
-    badge: null,
-  },
-  {
-    id: 41,
-    nombre: "Durazno Licuado",
-    categoria: "bebida",
-    descripcion: "Tiene durazno y leche.",
-    precio: 9,
-    imagen: "img/Jugodedurazno.jpg",
-    badge: null,
-  },
-];
-
-// ── Carrito ──────────────────────────────────────
+// ── Carrito LocalStorage ──────────────────────────────────────
 let carrito = [];
 
 function guardarCarrito() {
@@ -215,13 +59,11 @@ function cargarCarrito() {
 
 function actualizarContador() {
   const total = carrito.reduce((sum, p) => sum + p.cantidad, 0);
-  const badge = document.getElementById("cart-count");
+  const badge =
+    document.getElementById("cart-count") ||
+    document.getElementById("cartCount");
   if (badge) {
     badge.textContent = total;
-    badge.classList.remove("bump");
-    void badge.offsetWidth;
-    badge.classList.add("bump");
-    setTimeout(() => badge.classList.remove("bump"), 300);
   }
 }
 
@@ -247,15 +89,358 @@ function cambiarCantidad(clave, delta) {
   renderizarCarrito();
 }
 
-// ── Configurador de Pizzas Conectado a Supabase ───────────────────────
-function renderizarPizzas() {
+// ── Variables de control para el Delivery ──────────────────────────────────────
+let tipoEnvioSeleccionado = "delivery"; // Por defecto delivery
+const COSTO_DELIVERY = 20.0;
+
+// Función interactiva para cambiar entre Delivery y Local
+window.seleccionarTipoEnvio = function (tipo) {
+  tipoEnvioSeleccionado = tipo;
+
+  const btnDelivery = document.getElementById("btn-opcion-delivery");
+  const btnLocal = document.getElementById("btn-opcion-local");
+  const contenedorEnvio = document.getElementById("contenedor-datos-envio");
+  const envioTexto = document.getElementById("cart-envio-texto");
+
+  if (tipo === "delivery") {
+    // Activar botón Delivery
+    btnDelivery.style.background = "#e67e22";
+    btnDelivery.style.color = "white";
+    btnDelivery.style.borderColor = "#e67e22";
+    // Desactivar botón Local
+    btnLocal.style.background = "#fff";
+    btnLocal.style.color = "#333";
+    btnLocal.style.borderColor = "#ccc";
+
+    if (contenedorEnvio) contenedorEnvio.style.display = "block";
+    if (envioTexto) envioTexto.textContent = "Bs. 20.00";
+  } else {
+    // Activar botón Local
+    btnLocal.style.background = "#27ae60";
+    btnLocal.style.color = "white";
+    btnLocal.style.borderColor = "#27ae60";
+    // Desactivar botón Delivery
+    btnDelivery.style.background = "#fff";
+    btnDelivery.style.color = "#333";
+    btnDelivery.style.borderColor = "#ccc";
+
+    if (contenedorEnvio) contenedorEnvio.style.display = "none";
+    if (envioTexto) envioTexto.textContent = "Bs. 0.00 (Recoger)";
+  }
+
+  // Recalcular el total inmediatamente
+  renderizarCarrito();
+};
+
+// ── Renderizar Carrito con cálculo condicional del envío ─────────────────────────
+function renderizarCarrito() {
+  const contenedorCarrito = document.getElementById("cart-items");
+  const contenedorSubtotal = document.getElementById("cart-subtotal");
+  const contenedorTotal = document.getElementById("cart-total");
+
+  if (!contenedorCarrito) return;
+
+  if (carrito.length === 0) {
+    contenedorCarrito.innerHTML = `<p style="text-align:center; color: var(--text-soft); padding: 20px;">🛒 Tu carrito está vacío.</p>`;
+    if (contenedorSubtotal) contenedorSubtotal.textContent = "Bs. 0.00";
+    if (contenedorTotal) contenedorTotal.textContent = "Bs. 0.00";
+    return;
+  }
+
+  contenedorCarrito.innerHTML = carrito
+    .map(
+      (item) => `
+    <div class="cart-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="${item.imagen || "img/Logo_pizzeria.jpg"}" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;" onerror="this.src='img/Logo_pizzeria.jpg'">
+        <div>
+          <h4 style="margin: 0; font-size: 1rem;">${item.nombre}</h4>
+          <small style="color: #777;">${item.detalle || "Porción Regular"}</small><br>
+          <span style="font-weight: bold; color: var(--orange);">Bs. ${parseFloat(item.precio).toFixed(2)}</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button onclick="cambiarCantidad('${item.clave}', -1)" style="padding: 2px 8px; cursor: pointer;">-</button>
+        <span style="font-weight: bold;">${item.cantidad}</span>
+        <button onclick="cambiarCantidad('${item.clave}', 1)" style="padding: 2px 8px; cursor: pointer;">+</button>
+      </div>
+    </div>
+  `,
+    )
+    .join("");
+
+  const subtotal = carrito.reduce(
+    (sum, item) => sum + item.precio * item.cantidad,
+    0,
+  );
+  // Sumar los 20 Bs solo si seleccionó delivery
+  const cargoEnvio = tipoEnvioSeleccionado === "delivery" ? COSTO_DELIVERY : 0;
+  const totalConEnvio = subtotal + cargoEnvio;
+
+  if (contenedorSubtotal)
+    contenedorSubtotal.textContent = `Bs. ${subtotal.toFixed(2)}`;
+  if (contenedorTotal)
+    contenedorTotal.textContent = `Bs. ${totalConEnvio.toFixed(2)}`;
+}
+
+// GPS del navegador
+window.obtenerUbicacionActual = function () {
+  const inputUbicacion = document.getElementById("cart-ubicacion");
+  if (!navigator.geolocation) {
+    alert("La geolocalización no está soportada por tu navegador.");
+    return;
+  }
+  inputUbicacion.value = "Obteniendo coordenadas...";
+  navigator.geolocation.getCurrentPosition(
+    (posicion) => {
+      const lat = posicion.coords.latitude;
+      const lon = posicion.coords.longitude;
+      inputUbicacion.value = `https://www.google.com/maps?q=${lat},${lon}`;
+    },
+    (error) => {
+      alert(
+        "No se pudo obtener la localización por GPS. Escribe tu dirección manualmente.",
+      );
+      inputUbicacion.value = "";
+    },
+  );
+};
+
+// ── Procesar Confirmación Guardando a Supabase y enviando WhatsApp ───────────────
+window.procesarConfirmarPedido = async function () {
+  if (carrito.length === 0) {
+    alert("El carrito está vacío.");
+    return;
+  }
+
+  let ubicacion = "Recoge en el local";
+  if (tipoEnvioSeleccionado === "delivery") {
+    ubicacion = document.getElementById("cart-ubicacion").value.trim();
+    if (!ubicacion) {
+      alert("Por favor, introduce tu dirección para el delivery.");
+      document.getElementById("cart-ubicacion").focus();
+      return;
+    }
+  }
+
+  const comentario = document.getElementById("cart-comentario").value.trim();
+
+  // Leer sesión del local storage
+  let clienteNombre = "Cliente Anónimo";
+  let clienteId = null;
+  const sesionGuardada = localStorage.getItem("usuario_sesion");
+
+  if (sesionGuardada) {
+    try {
+      const usuario = JSON.parse(sesionGuardada);
+      clienteNombre = usuario.nombre || usuario.email || clienteNombre;
+      clienteId = usuario.id || null;
+    } catch (e) {
+      console.error("Error leyendo la sesión:", e);
+    }
+  }
+
+  // Cálculos matemáticos del total
+  const subtotal = carrito.reduce(
+    (sum, item) => sum + item.precio * item.cantidad,
+    0,
+  );
+  const cargoEnvio = tipoEnvioSeleccionado === "delivery" ? COSTO_DELIVERY : 0;
+  const totalCobrado = subtotal + cargoEnvio;
+
+  try {
+    if (!db) throw new Error("La base de datos de Supabase no está lista.");
+
+    // A) INSERTAR EN LA TABLA 'orders' (Coincidiendo exactamente con tu SQL)
+    const { data: ordenInsertada, error: errorOrden } = await db
+      .from("orders")
+      .insert([
+        {
+          user_id: clienteId, // UUID de Supabase o null si es anónimo
+          nombre_cliente: clienteNombre, // Columna de tu SQL
+          tipo_entrega: tipoEnvioSeleccionado, // 'delivery' o 'local'
+          ubicacion: ubicacion + (comentario ? ` (Nota: ${comentario})` : ""),
+          total: totalCobrado,
+          estado: "pendiente", // En minúscula como tus CHECK constraints
+        },
+      ])
+      .select(); // Requerido para recuperar el ID generado
+
+    if (errorOrden) throw errorOrden;
+
+    const orderIdGenerado = ordenInsertada[0].id;
+
+    // B) PREPARAR LOS ITEMS PARA LA TABLA 'order_items'
+    // Mapeamos los elementos del carrito convirtiendo IDs temporales de texto a enteros legibles si es necesario
+    const filasItems = carrito.map((item) => {
+      // Intentamos extraer el ID numérico del producto (ej: "prod-5" -> 5)
+      let prodIdNumerico = null;
+      if (typeof item.id === "string") {
+        const match = item.id.match(/\d+/);
+        if (match) prodIdNumerico = parseInt(match[0], 10);
+      } else if (typeof item.id === "number") {
+        prodIdNumerico = item.id;
+      }
+
+      return {
+        order_id: orderIdGenerado,
+        product_id: prodIdNumerico, // Sincronizado con la columna 'products.id'
+        cantidad: item.cantidad,
+        precio_unit: item.precio,
+      };
+    });
+
+    // C) INSERTAR DETALLES EN 'order_items'
+    const { error: errorItems } = await db
+      .from("order_items")
+      .insert(filasItems);
+
+    if (errorItems) throw errorItems;
+
+    // ── Enviar Mensaje a WhatsApp (Mantenemos tu excelente servicio al cliente) ──
+    const numeroTelefono = "59171467662";
+    let mensajeWA = `✨ *NUEVO PEDIDO #${orderIdGenerado} - PIZZERÍA DÍ CARLOS* ✨\n\n`;
+    mensajeWA += `👤 *Cliente:* ${clienteNombre}\n`;
+    mensajeWA += `🛵 *Modalidad:* ${tipoEnvioSeleccionado === "delivery" ? "Delivery" : "Recoger en Local"}\n\n`;
+    mensajeWA += `📋 *Detalles:*\n`;
+
+    carrito.forEach((item) => {
+      mensajeWA += ` • ${item.cantidad}x ${item.nombre} [${item.detalles || "Regular"}] - Bs. ${(item.precio * item.cantidad).toFixed(2)}\n`;
+    });
+
+    mensajeWA += `\n💵 *Subtotal:* Bs. ${subtotal.toFixed(2)}`;
+    mensajeWA += `\n🚀 *Envío:* Bs. ${cargoEnvio.toFixed(2)}`;
+    mensajeWA += `\n💰 *TOTAL:* Bs. ${totalCobrado.toFixed(2)}\n\n`;
+    mensajeWA += `📍 *Dirección:* ${ubicacion}\n`;
+    if (comentario) mensajeWA += `💬 *Nota:* ${comentario}\n`;
+
+    const urlWhatsApp = `https://wa.me/${numeroTelefono}?text=${encodeURIComponent(mensajeWA)}`;
+
+    // Limpiar Carrito tras éxito
+    carrito = [];
+    guardarCarrito();
+    actualizarContador();
+    renderizarCarrito();
+
+    if (document.getElementById("cart-ubicacion"))
+      document.getElementById("cart-ubicacion").value = "";
+    if (document.getElementById("cart-comentario"))
+      document.getElementById("cart-comentario").value = "";
+
+    alert(
+      "🎉 ¡Pedido completado con éxito en el sistema! Abriendo WhatsApp...",
+    );
+    window.open(urlWhatsApp, "_blank");
+
+    if (typeof cargarPedidosCajero === "function") cargarPedidosCajero();
+  } catch (err) {
+    console.error("Error al procesar la orden:", err);
+    alert("Hubo un error al guardar tu pedido: " + (err.message || err));
+  }
+};
+
+// ── 🛠️ CORRECCIÓN: Cargar Pedidos de Clientes en el panel del Cajero ───────────────
+async function cargarPedidosCajero() {
+  const tablaPedidos = document.getElementById("cajero-tabla-pedidos-clientes");
+  if (!tablaPedidos) return;
+
+  try {
+    if (!db) throw new Error("Supabase no está inicializado.");
+
+    // Leemos la tabla 'orders' ordenando por los más recientes
+    const { data: listaPedidos, error } = await db
+      .from("orders")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if (error) throw error;
+
+    tablaPedidos.innerHTML = "";
+
+    if (!listaPedidos || listaPedidos.length === 0) {
+      tablaPedidos.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:15px; color:#888;">No hay pedidos registrados en el sistema.</td></tr>`;
+      return;
+    }
+
+    listaPedidos.forEach((pedido) => {
+      // Formateamos la fecha u hora de creación si existe la columna, de lo contrario usamos la actual
+      const fechaFormateada = pedido.created_at
+        ? new Date(pedido.created_at).toLocaleString()
+        : "Reciente";
+
+      // Definimos colores decorativos según el estado de la compra
+      let colorEstado = "#f1c40f";
+      if (pedido.estado === "Entregado" || pedido.estado === "Completado")
+        colorEstado = "#2ecc71";
+      if (pedido.estado === "Cancelado") colorEstado = "#e74c3c";
+
+      tablaPedidos.innerHTML += `
+        <tr style="border-bottom: 1px solid #eee; font-size: 0.95rem;">
+          <td style="padding: 12px;">
+            <strong>${pedido.cliente_nombre || "Anónimo"}</strong><br>
+            <small style="color:#888;">${fechaFormateada}</small>
+          </td>
+          <td style="padding: 12px; max-width: 200px; word-wrap: break-word;">
+            <span style="font-size: 0.85rem; color: #555;">${pedido.direccion || "Sin dirección"}</span><br>
+            <small style="color: #e67e22; font-style: italic;">Nota: ${pedido.comentario || "Ninguna"}</small>
+          </td>
+          <td style="padding: 12px; color: #333;">${pedido.detalle_pedido || "Sin ítems registrados"}</td>
+          <td style="padding: 12px; font-weight: bold; color: #c0392b;">Bs. ${parseFloat(pedido.total || 0).toFixed(2)}</td>
+          <td style="padding: 12px; text-align: center;">
+            <span style="background: ${colorEstado}; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+              ${pedido.estado || "Pendiente"}
+            </span>
+          </td>
+        </tr>
+      `;
+    });
+  } catch (err) {
+    console.error("Error al cargar pedidos en panel:", err);
+    tablaPedidos.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:15px; color:#e74c3c;">❌ Error al conectar con Supabase: ${err.message}</td></tr>`;
+  }
+}
+// ── Función para obtener los sabores de pizza desde Supabase ──
+async function obtenerSaboresDesdeSupabase() {
+  try {
+    if (!db) return;
+    const { data, error } = await db
+      .from("products")
+      .select("*")
+      .eq("categoria", "pizza")
+      .eq("disponible", true);
+
+    if (error) throw error;
+
+    // Mapeamos los datos de Supabase al formato que necesita el configurador
+    saboresPizza = data.map((p) => ({
+      id: p.id.toString(),
+      nombre: p.nombre,
+      descripcion: p.descripcion,
+      badge: p.badge === "pizza" ? null : p.badge,
+      imagen: p.imagen_url || "img/Logo_pizzeria.jpg",
+    }));
+  } catch (err) {
+    console.error("Error al cargar sabores de pizza:", err);
+  }
+}
+
+// ── Configurador de Pizzas Dinámico ─────────────────────────────────────────
+async function renderizarPizzas() {
   const contenedor = document.getElementById("products-container");
   if (!contenedor) return;
 
-  let saborSel = saboresPizza[0];
-  let tamañoSel = tamañosPizza[2];
+  // Esperar a que se traigan los sabores actualizados desde la BD antes de construir
+  await obtenerSaboresDesdeSupabase();
 
-  async function build() {
+  if (saboresPizza.length === 0) {
+    contenedor.innerHTML = `<p style="text-align:center; color: var(--text-soft);">🍕 Registra sabores en el panel de cajero para empezar.</p>`;
+    return;
+  }
+
+  let saborSel = saboresPizza[0];
+  let tamañoSel = tamañosPizza[2]; // Mediana por defecto (como la imagen)
+
+  function build() {
     contenedor.innerHTML = `
       <div class="pizza-configurator">
         <div class="pizza-step">
@@ -266,7 +451,7 @@ function renderizarPizzas() {
                 (s) => `
               <button class="flavor-btn ${s.id === saborSel.id ? "selected" : ""}" data-sabor="${s.id}">
                 ${s.badge ? `<span class="flavor-badge">${s.badge}</span>` : ""}
-                <img src="${s.imagen}" alt="${s.nombre}" />
+                <img src="${s.imagen}" alt="${s.nombre}" onerror="this.src='img/Logo_pizzeria.jpg'" />
                 <span class="flavor-name">${s.nombre}</span>
               </button>
             `,
@@ -295,7 +480,7 @@ function renderizarPizzas() {
 
         <div class="pizza-summary">
           <div class="pizza-summary-info">
-            <img class="pizza-summary-img" src="${saborSel.imagen}" alt="${saborSel.nombre}" />
+            <img class="pizza-summary-img" src="${saborSel.imagen}" alt="${saborSel.nombre}" onerror="this.src='img/Logo_pizzeria.jpg'" />
             <div>
               <div class="pizza-summary-name">🍕 Pizza ${saborSel.nombre} — ${tamañoSel.label}</div>
               <div class="pizza-summary-detail">${tamañoSel.porciones} porciones · ${saborSel.descripcion}</div>
@@ -324,50 +509,24 @@ function renderizarPizzas() {
       });
     });
 
-    // Agregar al carrito consultando a Supabase
+    // Agregar al carrito
     contenedor
       .querySelector("#btn-agregar-pizza")
-      .addEventListener("click", async function () {
-        const boton = this;
-        boton.disabled = true;
-        boton.textContent = "Buscando...";
-
-        // CORREGIDO: Buscamos con "porciones" en minúscula tal como se genera usualmente
-        const nombreBuscar = `Pizza Di Carlos (${tamañoSel.porciones} porciones)`;
-
-        // CORREGIDO: Usamos el cliente 'db' global en vez de '_supabase'
-        // BUSCA ESTA LÍNEA EN TU js/app.js O DONDE HAGAS LA CONSULTA DE PRODUCTOS/PERFILES:
-        const { data: profile, error: profileError } = await supabaseClient
-          .from("profiles")
-          .select("rol")
-          .eq("id", user.id)
-          .maybeSingle(); // <--- CAMBIA .single() POR .maybeSingle()
-
-        // Ahora validas de forma segura sin que la consola rompa el script
-        if (profileError) {
-          console.error("Error al obtener perfil:", profileError);
-        } else if (!profile) {
-          console.log("No se encontró ningún perfil creado para este ID.");
-        } else {
-          console.log("Usuario ingresó con el rol:", profile.rol);
-        }
-        const clave = `pizza-${prodSupabase.id}`;
+      .addEventListener("click", function () {
+        const clave = `pizza-${saborSel.id}-${tamañoSel.id}`;
         const detalleStr = `${tamañoSel.label} · ${tamañoSel.porciones} porciones`;
 
         agregarAlCarrito(
           clave,
-          prodSupabase.nombre,
-          parseFloat(prodSupabase.precio),
+          `Pizza ${saborSel.nombre}`,
+          parseFloat(tamañoSel.precio),
           saborSel.imagen,
           detalleStr,
         );
 
-        boton.textContent = "✓ Agregado";
-        boton.style.background = "linear-gradient(135deg,#27ae60,#2ecc71)";
+        this.textContent = "✓ Agregado";
         setTimeout(() => {
-          boton.disabled = false;
-          boton.textContent = "+ Agregar al carrito";
-          boton.style.background = "";
+          this.textContent = "+ Agregar al carrito";
         }, 1200);
       });
   }
@@ -386,461 +545,244 @@ function getSizeIcon(id) {
   return icons[id] || "🍕";
 }
 
-// ── Render productos normales ────────────────────
-function renderizarProductos(filtro = "todos") {
-  const contenedor = document.getElementById("products-container");
-  if (!contenedor) return;
+// ── Renderizar resto de productos desde Supabase ────────────────────────────
+async function renderizarProductos(categoriaSeleccionada = "todos") {
+  const contenedorMenu = document.getElementById("menu-container");
+  if (!contenedorMenu) return;
 
-  if (filtro === "pizza") {
-    renderizarPizzas();
-    return;
-  }
-
-  if (filtro === "todos") {
-    renderizarPizzas();
-    const extra = document.createElement("div");
-    extra.className = "products-extra-grid";
-    productos.forEach((p) => {
-      const badgeHTML = p.badge
-        ? `<span class="product-badge">${p.badge}</span>`
-        : "";
-      extra.innerHTML += `
-        <div class="product-card">
-          <div class="product-img-wrap">
-            <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" />
-            ${badgeHTML}
-          </div>
-          <div class="product-body">
-            <h3>${p.nombre}</h3>
-            <p>${p.descripcion}</p>
-            <div class="product-footer">
-              <span class="product-price">Bs. ${p.precio}</span>
-              <button class="btn-add" data-id="${p.id}">+ Agregar</button>
-            </div>
-          </div>
-        </div>`;
-    });
-    contenedor.appendChild(extra);
-    bindBtnAdd(extra);
-    return;
-  }
-
-  contenedor.innerHTML = "";
-  const lista = productos.filter((p) => p.categoria === filtro);
-
-  if (lista.length === 0) {
-    contenedor.innerHTML = `<p class="no-products">No hay productos en esta categoría.</p>`;
-    return;
-  }
-
-  lista.forEach((p) => {
-    const badgeHTML = p.badge
-      ? `<span class="product-badge">${p.badge}</span>`
-      : "";
-    contenedor.innerHTML += `
-      <div class="product-card">
-        <div class="product-img-wrap">
-          <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" />
-          ${badgeHTML}
-        </div>
-        <div class="product-body">
-          <h3>${p.nombre}</h3>
-          <p>${p.descripcion}</p>
-          <div class="product-footer">
-            <span class="product-price">Bs. ${p.precio}</span>
-            <button class="btn-add" data-id="${p.id}">+ Agregar</button>
-          </div>
-        </div>
-      </div>`;
-  });
-
-  bindBtnAdd(contenedor);
-}
-
-function bindBtnAdd(scope) {
-  scope.querySelectorAll(".btn-add").forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const prod = productos.find((p) => p.id === parseInt(this.dataset.id));
-      if (!prod) return;
-      agregarAlCarrito(
-        `prod-${prod.id}`,
-        prod.nombre,
-        prod.precio,
-        prod.imagen,
-        null,
-      );
-      this.textContent = "✓ Agregado";
-      this.style.background = "linear-gradient(135deg,#27ae60,#2ecc71)";
-      setTimeout(() => {
-        this.textContent = "+ Agregar";
-        this.style.background = "";
-      }, 1000);
-    });
-  });
-}
-
-// ── Filtros del menú ─────────────────────────────
-function iniciarFiltros() {
-  const filtros = document.querySelectorAll(".menu-filter-btn");
-  filtros.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      filtros.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderizarProductos(btn.dataset.filtro);
-    });
-  });
-}
-
-// ── Render Carrito ───────────────────────────────
-let requiereDelivery = false;
-let ubicacionUsuario = null;
-
-function renderizarCarrito() {
-  const contenedor = document.getElementById("cart-container");
-  if (!contenedor) return;
-  contenedor.innerHTML = "";
-
-  if (carrito.length === 0) {
-    contenedor.innerHTML = `
-      <div class="cart-empty">
-        <span class="cart-empty-icon">🛒</span>
-        <h3>Tu carrito está vacío</h3>
-        <p>Agrega productos desde el menú para comenzar tu pedido</p>
-      </div>`;
-    return;
-  }
-
-  carrito.forEach((item) => {
-    const imgHTML = item.imagen
-      ? `<img class="cart-item-img" src="${item.imagen}" alt="${item.nombre}" />`
-      : `<div class="cart-item-emoji-box">🍽️</div>`;
-    const subtotal = item.precio * item.cantidad;
-
-    contenedor.innerHTML += `
-      <div class="cart-item">
-        ${imgHTML}
-        <div class="cart-item-info">
-          <div class="cart-item-name">${item.nombre}</div>
-          ${item.detalle ? `<div class="cart-item-size">${item.detalle}</div>` : ""}
-          <div class="cart-item-price">Bs. ${item.precio} c/u</div>
-        </div>
-        <div class="cart-item-controls">
-          <button class="qty-btn btn-minus" data-clave="${item.clave}">−</button>
-          <span class="qty-value">${item.cantidad}</span>
-          <button class="qty-btn btn-plus" data-clave="${item.clave}">+</button>
-        </div>
-        <div class="cart-item-total">Bs. ${subtotal}</div>
-        <button class="btn-remove" data-clave="${item.clave}" title="Eliminar">✕</button>
-      </div>`;
-  });
-
-  const totalProductos = carrito.reduce(
-    (sum, p) => sum + p.precio * p.cantidad,
-    0,
-  );
-  const totalItems = carrito.reduce((sum, p) => sum + p.cantidad, 0);
-  const costoDelivery = requiereDelivery ? 20 : 0;
-  const totalFinal = totalProductos + costoDelivery;
-
-  contenedor.innerHTML += `
-    <div class="cart-summary">
-      <div class="cart-summary-row" style="padding: 12px 0; border-bottom: 1px dashed var(--border); margin-bottom: 8px;">
-        <span style="font-weight: 600; color: var(--dark);">¿Necesitas Delivery?</span>
-        <button id="btn-toggle-delivery" class="btn-add" style="padding: 6px 14px; font-size: 0.8rem; background: ${requiereDelivery ? "linear-gradient(135deg, #27ae60, #2ecc71)" : "linear-gradient(135deg, var(--red), var(--orange))"}">
-          ${requiereDelivery ? "✓ SÍ (Bs. 20)" : "✕ NO (Retiro en local)"}
-        </button>
-      </div>
-
-      ${
-        requiereDelivery
-          ? `
-      <div class="cart-summary-row" id="geo-row" style="padding: 8px 0; border-bottom: 2px dashed var(--border); margin-bottom: 12px; font-size: 0.85rem;">
-        <span>GPS:</span>
-        <span id="geo-status" style="color: ${ubicacionUsuario ? "#27ae60" : "#d35400"}; font-weight: bold;">
-          ${ubicacionUsuario ? "📍 Ubicación fijada con éxito" : "⚠️ Buscando ubicación actual..."}
-        </span>
-      </div>`
-          : ""
-      }
-
-      <div class="cart-summary-row">
-        <span>Productos (${totalItems})</span>
-        <span>Bs. ${totalProductos}</span>
-      </div>
-      <div class="cart-summary-row">
-        <span>Delivery</span>
-        <span style="font-weight: ${requiereDelivery ? "700" : "normal"}; color: ${requiereDelivery ? "var(--red)" : "inherit"}">
-          ${requiereDelivery ? "Bs. 20" : "Gratis (Retiro) 🎉"}
-        </span>
-      </div>
-      <div class="cart-total-row">
-        <span class="cart-total-label">Total</span>
-        <span class="cart-total-amount">Bs. ${totalFinal}</span>
-      </div>
-      <button class="btn-checkout">🍕 Enviar Pedido por WhatsApp</button>
-    </div>`;
-
-  if (requiereDelivery && !ubicacionUsuario) {
-    obtenerUbicacionGPS();
-  }
-
-  // Eventos de botones del carrito
-  contenedor
-    .querySelector("#btn-toggle-delivery")
-    .addEventListener("click", () => {
-      requiereDelivery = !requiereDelivery;
-      if (!requiereDelivery) ubicacionUsuario = null;
-      renderizarCarrito();
-    });
-
-  contenedor
-    .querySelectorAll(".btn-plus")
-    .forEach((btn) =>
-      btn.addEventListener("click", () =>
-        cambiarCantidad(btn.dataset.clave, 1),
-      ),
-    );
-
-  contenedor
-    .querySelectorAll(".btn-minus")
-    .forEach((btn) =>
-      btn.addEventListener("click", () =>
-        cambiarCantidad(btn.dataset.clave, -1),
-      ),
-    );
-
-  contenedor.querySelectorAll(".btn-remove").forEach((btn) =>
-    btn.addEventListener("click", () => {
-      carrito = carrito.filter((p) => p.clave !== btn.dataset.clave);
-      guardarCarrito();
-      actualizarContador();
-      renderizarCarrito();
-    }),
-  );
-
-  contenedor.querySelector(".btn-checkout").addEventListener("click", () => {
-    if (requiereDelivery && !ubicacionUsuario) {
-      alert(
-        "Por favor, permite el acceso al GPS para enviar tu ubicación exacta junto al pedido.",
-      );
-      return;
-    }
-    enviarPedidoWhatsApp(totalFinal, costoDelivery);
-  });
-}
-
-function obtenerUbicacionGPS() {
-  const statusTxt = document.getElementById("geo-status");
-
-  if (!navigator.geolocation) {
-    if (statusTxt)
-      statusTxt.innerText = "❌ Tu navegador no soporta geolocalización";
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-      // CORREGIDO: Formato del link oficial de Google Maps
-      ubicacionUsuario = `https://maps.google.com/?q=${lat},${lon}`;
-
-      if (statusTxt) {
-        statusTxt.innerText = "📍 Ubicación fijada con éxito";
-        statusTxt.style.color = "#27ae60";
-      }
-    },
-    (error) => {
-      console.error(error);
-      if (statusTxt) {
-        statusTxt.innerText = "❌ Permiso denegado o error de señal GPS";
-        statusTxt.style.color = "#c0392b";
-      }
-    },
-    { enableHighAccuracy: true, timeout: 10000 },
-  );
-}
-
-function enviarPedidoWhatsApp(totalFinal, costoDelivery) {
-  const numeroTelefono = "59171467662";
-
-  let mensaje = `*🍕 ¡NUEVO PEDIDO - PIZZERÍA DÍ CARLOS!* 🍕\n\n`;
-  mensaje += `*Detalle del pedido:*\n`;
-
-  carrito.forEach((item) => {
-    const detalleStr = item.detalle ? ` (${item.detalle})` : "";
-    mensaje += `• ${item.cantidad}x ${item.nombre}${detalleStr} - *Bs. ${item.precio * item.cantidad}*\n`;
-  });
-
-  mensaje += `\n---------------------------\n`;
-  if (requiereDelivery) {
-    mensaje += `*Método de Entrega:* 🛵 Envío a Domicilio\n`;
-    mensaje += `*Costo Delivery:* Bs. ${costoDelivery}\n`;
-    mensaje += `*Ubicación de Entrega (Google Maps):*\n${ubicacionUsuario}\n`;
-  } else {
-    mensaje += `*Método de Entrega:* 🏪 Retiro en el Local\n`;
-  }
-  mensaje += `---------------------------\n`;
-  mensaje += `*TOTAL A PAGAR:* *Bs. ${totalFinal}*\n\n`;
-  mensaje += `¡Muchas gracias! Quedo a la espera de la confirmación.`;
-
-  const mensajeCodificado = encodeURIComponent(mensaje);
-  const urlWhatsApp = `https://wa.me/${numeroTelefono}?text=${mensajeCodificado}`;
-
-  window.open(urlWhatsApp, "_blank");
-
-  carrito = [];
-  requiereDelivery = false;
-  ubicacionUsuario = null;
-  guardarCarrito();
-  actualizarContador();
-  renderizarCarrito();
-}
-
-// ── Inicializar aplicación cuando el DOM esté listo ───────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
-  cargarCarrito();
-  renderizarProductos();
-  iniciarFiltros();
-  renderizarCarrito();
-  actualizarContador();
-
-  const filtrosBtn = document.querySelectorAll(".menu-filter-btn");
-  filtrosBtn.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      filtrosBtn.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      const categoria = btn.dataset.filtro;
-      if (categoria === "pizza") {
-        renderizarPizzas();
-      } else {
-        renderizarProductos(categoria);
-      }
-    });
-  });
-}); // CORREGIDO: Cierre correcto del DOMContentLoaded
-
-// Reemplazar la función original de renderizarProductos en tu js/app.js por esta versión asíncrona:
-async function renderizarProductos(filtro = "todos") {
-  const contenedor = document.getElementById("products-container");
-  if (!contenedor) return;
-
-  if (filtro === "pizza") {
-    renderizarPizzas();
-    return;
-  }
-
-  // Si el filtro es "todos", primero inyectamos el configurador interactivo de Pizzas
-  if (filtro === "todos") {
-    renderizarPizzas();
-
-    // Creamos un contenedor exclusivo para los productos dinámicos de Supabase
-    const extra = document.createElement("div");
-    extra.className = "products-extra-grid";
-    extra.innerHTML =
-      '<p class="loading-msg">Cargando productos adicionales...</p>';
-    contenedor.appendChild(extra);
-
-    try {
-      // Consultar todos los productos disponibles que no sean pizzas de forma asíncrona
-      const { data: productosSupabase, error } = await window.db
-        .from("productos")
-        .select("*")
-        .eq("disponible", true)
-        .neq("categoria", "pizza") // Excluye las pizzas si las subes a la misma tabla
-        .order("nombre", { ascending: true });
-
-      if (error) throw error;
-
-      extra.innerHTML = ""; // Limpiar mensaje de carga
-
-      if (!productosSupabase || productosSupabase.length === 0) {
-        // Si la base de datos está vacía, cargamos el respaldo local estructurado
-        productos.forEach((p) => {
-          extra.innerHTML += generarCardProductoHTML(p);
-        });
-      } else {
-        // Renderizamos los productos que vienen directamente desde Supabase
-        productosSupabase.forEach((p) => {
-          extra.innerHTML += generarCardProductoHTML(p);
-        });
-      }
-      bindBtnAdd(extra);
-    } catch (err) {
-      console.error(
-        "Error al conectar con Supabase, usando respaldo local:",
-        err,
-      );
-      extra.innerHTML = "";
-      productos.forEach((p) => {
-        extra.innerHTML += generarCardProductoHTML(p);
-      });
-      bindBtnAdd(extra);
-    }
-    return;
-  }
-
-  // Filtrado específico por categorías (pasta, tipico, bebida) desde Supabase
-  contenedor.innerHTML = '<p class="loading-msg">Filtrando menú...</p>';
+  contenedorMenu.innerHTML = `<p style="text-align:center; color: var(--text-soft);">🔍 Cargando el menú de hoy...</p>`;
 
   try {
-    const { data: listaFiltrada, error } = await window.db
-      .from("productos")
+    if (!db)
+      throw new Error("La base de datos de Supabase no está inicializada.");
+
+    let query = db.from("products").select("*");
+
+    // Omitimos renderizar de nuevo la categoría pizza aquí porque ya tiene su propio contenedor arriba
+    if (categoriaSeleccionada !== "todos") {
+      query = query.eq("categoria", categoriaSeleccionada);
+    } else {
+      query = query.neq("categoria", "pizza");
+    }
+
+    const { data: productos, error } = await query;
+    if (error) throw error;
+
+    if (!productos || productos.length === 0) {
+      contenedorMenu.innerHTML = `<p style="text-align:center; color: var(--text-soft);">🍽️ No hay otros productos en esta categoría.</p>`;
+      return;
+    }
+
+    contenedorMenu.innerHTML = "";
+    productos.forEach((producto) => {
+      const card = document.createElement("div");
+      card.className = "menu-card";
+      const imagenUrl = producto.imagen_url || "img/Logo_pizzeria.jpg";
+
+      card.innerHTML = `
+        <img src="${imagenUrl}" alt="${producto.nombre}" class="menu-card-img" onerror="this.src='img/Logo_pizzeria.jpg'">
+        <div class="menu-card-body">
+          <div class="menu-card-header">
+            <h3>${producto.nombre}</h3>
+            <span class="menu-card-price">Bs. ${parseFloat(producto.precio).toFixed(2)}</span>
+          </div>
+          <p class="menu-card-desc">${producto.descripcion || "Sin descripción disponible."}</p>
+          <button class="btn btn-primary btn-block" onclick="agregarAlimentoDirecto('${producto.id}', '${producto.nombre}', ${producto.precio})">🛒 Agregar al Pedido</button> 
+        </div>
+      `;
+      contenedorMenu.appendChild(card);
+    });
+  } catch (err) {
+    console.error("Error al obtener productos:", err);
+    contenedorMenu.innerHTML = `<p style="text-align:center; color: var(--red);">❌ Error al cargar el menú: ${err.message}</p>`;
+  }
+}
+
+// ── Panel del cajero: Inicialización corregida ──────────────────────────────
+function inicializarPanelCajero() {
+  const formulario = document.getElementById("form-add-producto");
+  const selectCategoria = document.getElementById("cajero-categoria");
+  const contenedorPrecio = document.getElementById("contenedor-precio-cajero");
+  const notaPizza = document.getElementById("nota-pizza-porciones");
+  const inputPrecio = document.getElementById("cajero-precio");
+
+  if (!formulario || !selectCategoria) return;
+
+  selectCategoria.addEventListener("change", () => {
+    if (selectCategoria.value === "pizza") {
+      contenedorPrecio.style.display = "none";
+      notaPizza.style.display = "block";
+      if (inputPrecio) {
+        inputPrecio.removeAttribute("required");
+        inputPrecio.value = "0";
+      }
+    } else {
+      contenedorPrecio.style.display = "block";
+      notaPizza.style.display = "none";
+      if (inputPrecio) {
+        inputPrecio.setAttribute("required", "true");
+        inputPrecio.value = "";
+      }
+    }
+  });
+
+  const clonForm = formulario.cloneNode(true);
+  formulario.parentNode.replaceChild(clonForm, formulario);
+
+  clonForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const categoriaSelect = document.getElementById("cajero-categoria").value;
+    let precioFinal =
+      parseFloat(document.getElementById("cajero-precio").value) || 0;
+
+    if (categoriaSelect === "pizza") {
+      precioFinal = 27.0; // Precio de referencia base (Personal)
+    }
+
+    const inputImagen = document.getElementById("cajero-imagen").value.trim();
+    const imagenFinal =
+      inputImagen !== "" ? inputImagen : "img/Logo_pizzeria.jpg";
+
+    const nuevoProducto = {
+      nombre: document.getElementById("cajero-nombre").value.trim(),
+      descripcion: document.getElementById("cajero-descripcion").value.trim(),
+      categoria: categoriaSelect,
+      precio: precioFinal,
+      imagen_url: imagenFinal,
+      badge: categoriaSelect === "pizza" ? "Popular" : "Nuevo",
+      disponible: true,
+    };
+
+    try {
+      if (!db) throw new Error("Supabase no está conectado.");
+
+      const { error } = await db.from("products").insert([nuevoProducto]);
+      if (error) throw error;
+
+      alert(`🎉 ¡${nuevoProducto.nombre} añadido con éxito!`);
+      clonForm.reset();
+
+      // Restaurar interfaz del formulario
+      contenedorPrecio.style.display = "block";
+      notaPizza.style.display = "none";
+
+      // Refrescar vistas del Menú y del Configurador inmediatamente
+      cargarProductosCajero();
+      renderizarPizzas();
+      renderizarProductos("todos");
+    } catch (err) {
+      alert("Error al guardar el producto: " + err.message);
+    }
+  });
+}
+
+// ── Cargar y administrar la tabla del Cajero ────────────────────────────────
+async function cargarProductosCajero() {
+  const tabla = document.getElementById("cajero-tabla-productos");
+  if (!tabla) return;
+
+  try {
+    if (!db) throw new Error("Supabase no está conectado.");
+
+    const { data: listaProductos, error } = await db
+      .from("products")
       .select("*")
-      .eq("disponible", true)
-      .eq("categoria", filtro)
-      .order("nombre", { ascending: true });
+      .order("id", { ascending: false });
 
     if (error) throw error;
 
-    contenedor.innerHTML = "";
+    tabla.innerHTML = "";
 
-    if (!listaFiltrada || listaFiltrada.length === 0) {
-      // Respaldo por si no hay registros en la nube de esa categoría
-      const listaLocal = productos.filter((p) => p.categoria === filtro);
-      if (listaLocal.length === 0) {
-        contenedor.innerHTML = `<p class="no-products">No hay productos en esta categoría.</p>`;
-        return;
-      }
-      listaLocal.forEach((p) => {
-        contenedor.innerHTML += generarCardProductoHTML(p);
-      });
-    } else {
-      listaFiltrada.forEach((p) => {
-        contenedor.innerHTML += generarCardProductoHTML(p);
-      });
+    if (!listaProductos || listaProductos.length === 0) {
+      tabla.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:15px; color:#e74c3c;">No hay productos registrados.</td></tr>`;
+      return;
     }
-    bindBtnAdd(contenedor);
-  } catch (err) {
-    console.error("Error en filtro remoto, usando local:", err);
-    contenedor.innerHTML = "";
-    const listaLocal = productos.filter((p) => p.categoria === filtro);
-    listaLocal.forEach((p) => {
-      contenedor.innerHTML += generarCardProductoHTML(p);
+
+    listaProductos.forEach((p) => {
+      const img = p.imagen_url || "img/Logo_pizzeria.jpg";
+      const precioMostrado =
+        p.categoria === "pizza" ? "Multi-porción" : `Bs. ${p.precio}`;
+
+      tabla.innerHTML += `
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 10px; display: flex; align-items: center; gap: 10px;">
+            <img src="${img}" style="width: 45px; height: 45px; border-radius: 6px; object-fit: cover;" onerror="this.src='img/Logo_pizzeria.jpg'">
+            <div>
+              <strong>${p.nombre}</strong><br>
+              <small style="color:#777;">${p.categoria.toUpperCase()}</small>
+            </div>
+          </td>
+          <td style="padding: 10px;"><span style="background:#fff3e0; color:#e65100; padding:3px 8px; border-radius:12px; font-size:0.8rem; font-weight:600;">${p.badge || "Menú"}</span></td>
+          <td style="padding: 10px; font-weight: bold;">${precioMostrado}</td>
+          <td style="padding: 10px; text-align: center;">
+            <button class="btn-borrar-producto" data-id="${p.id}" style="background:#e74c3c; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">
+              🗑️ Borrar
+            </button>
+          </td>
+        </tr>`;
     });
-    bindBtnAdd(contenedor);
+
+    tabla.querySelectorAll(".btn-borrar-producto").forEach((btn) => {
+      btn.addEventListener("click", async function () {
+        const idProducto = this.dataset.id;
+        const fila = this.closest("tr");
+        if (confirm("¿Seguro que deseas eliminar este producto del menú?")) {
+          const { error } = await db
+            .from("products")
+            .delete()
+            .eq("id", idProducto);
+          if (!error) {
+            fila.remove();
+            renderizarPizzas();
+            renderizarProductos("todos");
+          } else {
+            alert("Error al borrar: " + error.message);
+          }
+        }
+      });
+    });
+  } catch (err) {
+    console.error(err);
+    tabla.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:15px; color:#e74c3c;">Error al cargar datos.</td></tr>`;
   }
 }
 
-// Función auxiliar para mantener la consistencia visual y de las imágenes
-function generarCardProductoHTML(p) {
-  const badgeHTML = p.badge
-    ? `<span class="product-badge">${p.badge}</span>`
-    : "";
-  return `
-    <div class="product-card">
-      <div class="product-img-wrap">
-        <img src="${p.imagen}" alt="${p.nombre}" loading="lazy" />
-        ${badgeHTML}
-      </div>
-      <div class="product-body">
-        <h3>${p.nombre}</h3>
-        <p>${p.descripcion}</p>
-        <div class="product-footer">
-          <span class="product-price">Bs. ${p.precio}</span>
-          <button class="btn-add" data-id="${p.id}">+ Agregar</button>
-        </div>
-      </div>
-    </div>`;
+// ── Agregar alimentos que no son pizza de forma directa ──────────────────────
+function agregarAlimentoDirecto(id, nombre, precio) {
+  const clave = `prod-${id}`;
+  agregarAlCarrito(
+    clave,
+    nombre,
+    parseFloat(precio),
+    "img/Logo_pizzeria.jpg",
+    "Porción Regular",
+  );
+  alert(`🍔 ¡${nombre} agregado al pedido con éxito!`);
 }
+
+// ── Inicializar todo al cargar el documento ─────────────────────────────────
+// Busca esto al final de tu app.js y déjalo configurado así:
+document.addEventListener("DOMContentLoaded", () => {
+  cargarCarrito();
+  renderizarPizzas();
+  renderizarProductos("todos");
+  actualizarContador();
+  renderizarCarrito(); // Aseguramos renderizado inicial
+
+  const sesionGuardada = localStorage.getItem("usuario_sesion");
+  if (sesionGuardada) {
+    try {
+      const usuario = JSON.parse(sesionGuardada);
+      if (usuario.rol === "cajero" || usuario.rol === "admin") {
+        inicializarPanelCajero();
+        cargarProductosCajero(); // Menú de productos del cajero
+        cargarPedidosCajero(); // 🌟 NUEVO: Esto arreglará tu tabla de pedidos de clientes automáticamente
+      }
+    } catch (e) {
+      console.error("Error al analizar la sesión del cajero:", e);
+    }
+  }
+
+  // Filtros...
+});

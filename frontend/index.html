@@ -119,31 +119,257 @@
 
         <div class="menu-filters">
           <button class="menu-filter-btn active" data-filtro="todos">
-            🍽️ Todos
+            ✨ Todo
           </button>
           <button class="menu-filter-btn" data-filtro="pizza">🍕 Pizzas</button>
-          <button class="menu-filter-btn" data-filtro="pasta">🍝 Pasta</button>
+          <button class="menu-filter-btn" data-filtro="pasta">🍝 Pastas</button>
           <button class="menu-filter-btn" data-filtro="tipico">
-            🥘 Platos Típicos
+            🍔 Platos típicos
           </button>
           <button class="menu-filter-btn" data-filtro="bebida">
-            🥤 Jugos Batidos
+            🥤 Bebidas
           </button>
         </div>
 
+        <!-- 🍕 Aquí se renderiza el configurador de pizzas estático -->
         <div id="products-container" class="products-container"></div>
+
+        <br />
+        <hr style="border: 1px dashed var(--border); margin: 20px 0" />
+        <br />
+
+        <!-- 🍔 ¡AQUÍ ES DONDE SE RENDERIZARÁ TU COMIDA DE SUPABASE! -->
+        <div id="menu-container" class="products-container"></div>
       </section>
 
-      <!-- VISTA: CARRITO -->
+      <!-- VISTA: CARRITO (MODIFICADA CON DELIVERY, COMENTARIOS Y MAPA) -->
       <section id="view-carrito" class="view">
         <div class="section-header">
           <h2>Tu Carrito</h2>
-          <p>Revisa y confirma tu pedido</p>
+          <p>Revisa, modifica y confirma tu pedido antes de pagar</p>
         </div>
-        <div id="cart-container"></div>
-        <button class="nav-cart" data-view="cart">
-          🛒 <span class="cart-count" id="cartCount">0</span>
-        </button>
+
+        <div
+          class="cart-container"
+          style="max-width: 800px; margin: 0 auto; padding: 20px"
+        >
+          <div id="cart-items"></div>
+
+          <div
+            class="cart-delivery-options"
+            style="
+              margin-top: 25px;
+              padding: 20px;
+              background: #fff;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+              border: 1px solid #eee;
+              text-align: center;
+            "
+          >
+            <h3 style="margin-top: 0; margin-bottom: 15px; color: var(--dark)">
+              🛵 ¿Cómo deseas recibir tu pedido?
+            </h3>
+            <div
+              style="
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin-bottom: 15px;
+              "
+            >
+              <button
+                type="button"
+                id="btn-opcion-delivery"
+                onclick="seleccionarTipoEnvio('delivery')"
+                style="
+                  flex: 1;
+                  padding: 12px;
+                  font-size: 1rem;
+                  font-weight: bold;
+                  border-radius: 6px;
+                  border: 2px solid #e67e22;
+                  background: #e67e22;
+                  color: white;
+                  cursor: pointer;
+                  transition: 0.2s;
+                "
+              >
+                🛵 Delivery (+20 Bs.)
+              </button>
+              <button
+                type="button"
+                id="btn-opcion-local"
+                onclick="seleccionarTipoEnvio('local')"
+                style="
+                  flex: 1;
+                  padding: 12px;
+                  font-size: 1rem;
+                  font-weight: bold;
+                  border-radius: 6px;
+                  border: 2px solid #ccc;
+                  background: #fff;
+                  color: #333;
+                  cursor: pointer;
+                  transition: 0.2s;
+                "
+              >
+                🏪 Recoger en el Local (0 Bs.)
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="contenedor-datos-envio"
+            class="cart-delivery-details"
+            style="
+              margin-top: 25px;
+              padding: 20px;
+              background: #fff;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+              border: 1px solid #eee;
+            "
+          >
+            <h3 style="margin-top: 0; margin-bottom: 15px; color: var(--dark)">
+              📍 Detalles de la Entrega
+            </h3>
+
+            <div class="form-group" style="margin-bottom: 15px">
+              <label
+                style="display: block; margin-bottom: 5px; font-weight: 600"
+                >Tu Ubicación (Mapa):</label
+              >
+              <div style="display: flex; gap: 10px">
+                <input
+                  type="text"
+                  id="cart-ubicacion"
+                  placeholder="Enlace de Google Maps o Dirección detallada"
+                  style="
+                    flex: 1;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                  "
+                />
+                <button
+                  type="button"
+                  onclick="obtenerUbicacionActual()"
+                  style="
+                    padding: 10px 15px;
+                    background: #34495e;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                  "
+                >
+                  📍 Obtener GPS
+                </button>
+              </div>
+              <small style="color: #777; display: block; margin-top: 5px"
+                >Presiona el botón para capturar tu GPS automáticamente o pega
+                un link.</small
+              >
+            </div>
+          </div>
+
+          <div
+            class="cart-comments"
+            style="
+              margin-top: 25px;
+              padding: 20px;
+              background: #fff;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+              border: 1px solid #eee;
+            "
+          >
+            <div class="form-group" style="margin-bottom: 0">
+              <label
+                style="display: block; margin-bottom: 5px; font-weight: 600"
+                >Comentario o Notas para el pedido:</label
+              >
+              <textarea
+                id="cart-comentario"
+                rows="3"
+                placeholder="Ej: Sin cebolla, cambiar billete de 100 Bs, puerta color verde..."
+                style="
+                  width: 100%;
+                  padding: 12px;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                  box-sizing: border-box;
+                "
+              ></textarea>
+            </div>
+          </div>
+
+          <div
+            class="cart-summary"
+            style="
+              margin-top: 25px;
+              padding: 20px;
+              background: #fff;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+              border: 1px solid #eee;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 20px;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 15px;
+              "
+            >
+              <div style="display: flex; justify-content: space-between">
+                <span style="color: #555">Subtotal productos:</span>
+                <span id="cart-subtotal" style="font-weight: 600"
+                  >Bs. 0.00</span
+                >
+              </div>
+              <div style="display: flex; justify-content: space-between">
+                <span style="color: #555">Costo de envío:</span>
+                <span
+                  id="cart-envio-texto"
+                  style="font-weight: 600; color: #27ae60"
+                  >Bs. 20.00</span
+                >
+              </div>
+            </div>
+
+            <h3
+              style="
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                margin-top: 0;
+              "
+            >
+              <span>Total a pagar:</span>
+              <span id="cart-total" style="color: #e67e22; font-weight: 700"
+                >Bs. 0.00</span
+              >
+            </h3>
+
+            <button
+              class="btn btn-primary"
+              onclick="procesarConfirmarPedido()"
+              style="
+                width: 100%;
+                padding: 14px;
+                font-size: 1.1rem;
+                cursor: pointer;
+              "
+            >
+              🚀 Confirmar Pedido y Enviar a WhatsApp 🍕
+            </button>
+          </div>
+        </div>
       </section>
 
       <!-- VISTA: CONTACTO -->
@@ -261,6 +487,229 @@
           </div>
         </div>
       </section>
+
+      <!-- VISTA: PANEL DEL CAJERO (PROTEGIDO) -->
+      <section id="view-cajero" class="view">
+        <div class="section-header">
+          <h2>Panel de Administración (Cajero)</h2>
+          <p>
+            Gestiona los productos del menú y revisa los pedidos en tiempo real.
+          </p>
+        </div>
+
+        <div
+          class="auth-container"
+          style="max-width: 100%; margin-bottom: 30px"
+        >
+          <h3 style="margin-bottom: 15px; color: var(--dark)">
+            ✨ Guardar Nuevo Alimento en Menú
+          </h3>
+
+          <form
+            id="form-add-producto"
+            style="display: flex; flex-direction: column; gap: 15px"
+          >
+            <div class="form-group">
+              <label>Categoría del Alimento</label>
+              <select
+                id="cajero-categoria"
+                required
+                style="
+                  width: 100%;
+                  padding: 12px;
+                  border-radius: 6px;
+                  border: 1px solid #ddd;
+                "
+              >
+                <option value="pizza">🍕 Pizza (Sabor / Porciones)</option>
+                <option value="pasta">🍝 Pastas</option>
+                <option value="tipico">🍔 Platos típicos</option>
+                <option value="bebida">🥤 Bebidas</option>
+                <option value="otros">🍽️ Otros Platos</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nombre del Sabor / Comida</label>
+              <input
+                type="text"
+                id="cajero-nombre"
+                placeholder="Ej: Pepperoni / Hamburguesa Clásica"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Descripción e Ingredientes</label>
+              <textarea
+                id="cajero-descripcion"
+                rows="3"
+                placeholder="Ej: Queso mozzarella, pepperoni, salsa de la casa..."
+                required
+                style="
+                  width: 100%;
+                  padding: 12px;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                "
+              ></textarea>
+            </div>
+
+            <div class="form-group" id="contenedor-precio-cajero">
+              <label>Precio (Bs.)</label>
+              <input
+                type="number"
+                id="cajero-precio"
+                step="0.10"
+                placeholder="Ej: 35.00"
+              />
+            </div>
+
+            <div
+              id="nota-pizza-porciones"
+              style="
+                background: #fdf6ee;
+                padding: 10px;
+                border-left: 4px solid #e67e22;
+                font-size: 0.9rem;
+                display: none;
+                margin-bottom: 15px;
+              "
+            >
+              ℹ️ <strong>Nota de Porciones:</strong> Al ser categoría Pizza, el
+              sistema aplicará automáticamente los precios de porciones
+              configurados (2 porc: 25 Bs, 4 porc: 42 Bs, 6 porc: 56 Bs).
+            </div>
+
+            <div class="form-group">
+              <label>URL o Ruta de la Imagen</label>
+              <input
+                type="text"
+                id="cajero-imagen"
+                placeholder="Ej: https://enlace.com/imagen.jpg o img/mi-plato.jpg"
+                required
+                style="
+                  width: 100%;
+                  padding: 12px;
+                  border-radius: 6px;
+                  border: 1px solid #ddd;
+                "
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%">
+              ✨ Guardar Alimento en Menú
+            </button>
+          </form>
+        </div>
+
+        <!-- TABLA DE CONTROL DE PRODUCTOS EXISTENTES -->
+        <div
+          class="cajero-card"
+          style="
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
+          "
+        >
+          <h3
+            style="
+              margin-bottom: 15px;
+              color: var(--dark);
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            "
+          >
+            📋 Productos en el Menú (Supabase)
+          </h3>
+          <div style="overflow-x: auto">
+            <table
+              style="width: 100%; border-collapse: collapse; text-align: left"
+            >
+              <thead>
+                <tr
+                  style="
+                    border-bottom: 2px solid #ddd;
+                    background-color: #f8f9fa;
+                    font-size: 0.9rem;
+                  "
+                >
+                  <th style="padding: 10px">Producto</th>
+                  <th style="padding: 10px">Badge</th>
+                  <th style="padding: 10px">Precio</th>
+                  <th style="padding: 10px; text-align: center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="cajero-tabla-productos">
+                <tr>
+                  <td
+                    colspan="4"
+                    style="text-align: center; padding: 15px; color: #888"
+                  >
+                    Cargando productos de la base de datos...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TABLA DE PEDIDOS DE CLIENTES -->
+        <div
+          class="cajero-card"
+          style="
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+          "
+        >
+          <h3
+            style="
+              margin-bottom: 15px;
+              color: var(--dark);
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            "
+          >
+            📦 Pedidos Recientes de Clientes (Ventas)
+          </h3>
+          <div style="overflow-x: auto">
+            <table
+              style="width: 100%; border-collapse: collapse; text-align: left"
+            >
+              <thead>
+                <tr
+                  style="
+                    border-bottom: 2px solid #ddd;
+                    background-color: #f8f9fa;
+                    font-size: 0.9rem;
+                  "
+                >
+                  <th style="padding: 10px">Cliente / Fecha</th>
+                  <th style="padding: 10px">Entrega / Dirección</th>
+                  <th style="padding: 10px">Detalle del Pedido (Items)</th>
+                  <th style="padding: 10px">Total Cobrado</th>
+                  <th style="padding: 10px; text-align: center">Estado</th>
+                </tr>
+              </thead>
+              <tbody id="cajero-tabla-pedidos-clientes">
+                <tr>
+                  <td
+                    colspan="5"
+                    style="text-align: center; padding: 15px; color: #888"
+                  >
+                    Cargando el registro de compras...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer>
@@ -278,9 +727,8 @@
 
     <!-- SCRIPTS ORDENADOS CORRECTAMENTE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js"></script>
-    <script src="js/auth.js"></script>
-    <!-- AÑADIDO: Tu lógica de roles y autenticación -->
-    <script src="js/app.js"></script>
+    <script src="js/supabase-client.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/app.js" defer></script>
   </body>
 </html>
