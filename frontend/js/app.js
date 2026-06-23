@@ -641,8 +641,8 @@ function inicializarPanelCajero() {
     }
 
     const inputImagen = document.getElementById("cajero-imagen").value.trim();
-    const imagenFinal =
-      inputImagen !== "" ? inputImagen : "img/Logo_pizzeria.jpg";
+    // Si el usuario escribió algo, usamos eso. Si no, usamos el logo por defecto.
+    const imagenFinal = inputImagen ? inputImagen : "img/Logo_pizzeria.jpg";
 
     const nuevoProducto = {
       nombre: document.getElementById("cajero-nombre").value.trim(),
@@ -677,7 +677,7 @@ function inicializarPanelCajero() {
   });
 }
 
-// ── Cargar y administrar la tabla del Cajero ────────────────────────────────
+// ── Cargar y administrar la tabla del Cajero (MODIFICADO) ────────────────────
 async function cargarProductosCajero() {
   const tabla = document.getElementById("cajero-tabla-productos");
   if (!tabla) return;
@@ -704,6 +704,7 @@ async function cargarProductosCajero() {
       const precioMostrado =
         p.categoria === "pizza" ? "Multi-porción" : `Bs. ${p.precio}`;
 
+      // 🔥 Se añade el botón "data-agregar" condicional para añadir al carrito de ventas directamente
       tabla.innerHTML += `
         <tr style="border-bottom: 1px solid #eee;">
           <td style="padding: 10px; display: flex; align-items: center; gap: 10px;">
@@ -723,6 +724,27 @@ async function cargarProductosCajero() {
         </tr>`;
     });
 
+    // 🔥 EVENTO PARA AÑADIR DESDE LA TABLA DEL CAJERO
+    tabla.querySelectorAll(".btn-vender-cajero").forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        const nombre = this.dataset.nombre;
+        const precio = parseFloat(this.dataset.precio);
+        const categoria = this.dataset.categoria;
+
+        if (categoria === "pizza") {
+          alert(
+            "ℹ️ Para agregar pizzas al pedido, por favor usa el configurador de tamaños en la pestaña 'Menú'.",
+          );
+          return;
+        }
+
+        // Reutiliza tu función global para añadir directo
+        agregarAlimentoDirecto(id, nombre, precio);
+      });
+    });
+
+    // Eventos borrar (Se mantienen igual)
     tabla.querySelectorAll(".btn-borrar-producto").forEach((btn) => {
       btn.addEventListener("click", async function () {
         const idProducto = this.dataset.id;
